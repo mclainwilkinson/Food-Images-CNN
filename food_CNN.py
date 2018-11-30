@@ -3,7 +3,6 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torchvision.datasets as dsets
 import matplotlib.pyplot as plt
-import seaborn as sns
 import h5py
 import numpy as np
 import time
@@ -74,7 +73,7 @@ class CNN(nn.Module):
             nn.BatchNorm2d(20),
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, padding=1))  # output size = 3 x 3
-        self.fc = nn.Linear(3 * 3 * 20, 12)
+        self.fc = nn.Linear(3 * 3 * 20, 12)        # output size = 12
 
     def forward(self, x):
         out = self.layer1(x)
