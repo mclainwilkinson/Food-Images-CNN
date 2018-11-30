@@ -14,22 +14,19 @@ directories and files exist:
     these subfolders (i.e. 'tacos' or 'hot_dog') contain .jpg files of pictures of food from folder title 
 '''
 
-# define new categories in array
-new_category_names = ['pie', 'smooth_dessert', 'red_meat', 'egg', 'pasta', 'soup', 'salad', 'fried_food',
-                      'sandwich', 'rice', 'dumpling', 'noodles', 'cake', 'sweet_breakfast', 'shell']
+# define 12 new categories in array
+new_category_names = ['smooth_dessert', 'red_meat', 'egg', 'pasta', 'soup', 'salad', 'fried_food',
+                      'sandwich', 'noodles', 'cake', 'sweet_breakfast', 'shell']
 
 # create mapping from old categories --> new categories
-category_name_mapping = {'apple_pie': 'pie',
-                        'bibimbap': 'egg',
+category_name_mapping = {'bibimbap': 'egg',
                         'caesar_salad': 'salad',
                         'carrot_cake': 'cake',
-                        'cheesecake': 'pie',
                         'chocolate_cake': 'cake',
                         'chocolate_mousse': 'smooth_dessert',
                         'club_sandwich': 'sandwich',
                         'cup_cakes': 'cake',
                         'deviled_eggs': 'egg',
-                        'dumplings': 'dumpling',
                         'eggs_benedict': 'egg',
                         'escargots': 'shell',
                         'filet_mignon': 'red_meat',
@@ -38,12 +35,10 @@ category_name_mapping = {'apple_pie': 'pie',
                         'french_onion_soup': 'soup',
                         'french_toast': 'sweet_breakfast',
                         'fried_calamari': 'fried_food',
-                        'fried_rice': 'rice',
                         'frozen_yogurt': 'smooth_dessert',
                         'gnocchi': 'pasta',
                         'greek_salad': 'salad',
                         'grilled_cheese_sandwich': 'sandwich',
-                        'gyoza': 'dumpling',
                         'hamburger': 'sandwich',
                         'hot_and_sour_soup': 'soup',
                         'hot_dog': 'sandwich',
@@ -58,7 +53,6 @@ category_name_mapping = {'apple_pie': 'pie',
                         'onion_rings': 'fried_food',
                         'oysters': 'shell',
                         'pad_thai': 'noodles',
-                        'paella': 'rice',
                         'pancakes': 'sweet_breakfast',
                         'panna_cotta': 'smooth_dessert',
                         'pho': 'noodles',
@@ -69,7 +63,6 @@ category_name_mapping = {'apple_pie': 'pie',
                         'ramen': 'noodles',
                         'ravioli': 'pasta',
                         'red_velvet_cake': 'cake',
-                        'risotto': 'rice',
                         'spaghetti_bolognese': 'pasta',
                         'spaghetti_carbonara': 'pasta',
                         'steak': 'red_meat',
@@ -109,6 +102,7 @@ labels = np.array(labels)
 categories = np.array(new_category_names, dtype='S10')
 
 # split into train and test sets 80/20 split
+random.seed(0)
 num_images = len(images)
 split_index = 4 * num_images // 5
 train_images = images[:split_index]
@@ -119,9 +113,9 @@ print('number of training images:', len(train_images))
 print('number of testing images:', len(test_images))
 
 # create new dataset objects
-train_filename = 'NEW_food_train.h5'
+train_filename = 'food_train128.h5'
 train_file = h5py.File(train_filename, 'w')
-test_filename = 'NEW_food_test.h5'
+test_filename = 'food_test128.h5'
 test_file = h5py.File(test_filename, 'w')
 
 # add datasets to dataset objecta
