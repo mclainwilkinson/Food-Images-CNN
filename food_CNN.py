@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import torchvision.datasets as dsets
 import matplotlib.pyplot as plt
+import seaborn as sns
 import h5py
 import numpy as np
 import time
@@ -12,7 +13,7 @@ pd.set_option("display.max_columns", 15)
 # -----------------------------------------------------------------------------------
 # training parameters
 batch_size = 50
-num_epochs = 30
+num_epochs = 15
 
 # train and test set files
 h5train_file = "food_train128.h5"
@@ -73,7 +74,7 @@ class CNN(nn.Module):
             nn.BatchNorm2d(20),
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2, padding=1))  # output size = 3 x 3
-        self.fc = nn.Linear(3 * 3 * 20, 15)
+        self.fc = nn.Linear(3 * 3 * 20, 12)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -143,13 +144,11 @@ for images, labels in test_loader:
 # display overall results
 print('Accuracy of the model on the test images: %d %%' % (100 * correct / total))
 print('')
-print('total number of observations in test set by class:')
-print(zip(labels, total_array))
 # display individual category results
 print('Individual class accuracy:')
 target_classes = tuple(target_class.decode() for target_class in train_dataset.classes)
 for i, t in enumerate(target_classes):
-    print(t, '%.2f' % (100 * correct_array[i] / total_array[i]), '%')
+    print(t, correct_array[i], '/', total_array[i], '=>', '%.2f' % (100 * correct_array[i] / total_array[i]), '%')
 
 # show and print out class/accuracy for highest and lowest accuracy values
 pct_array = correct_array / total_array
@@ -159,6 +158,7 @@ print('class with highest accuracy:', target_classes[best],
       '%.2f' % (100 * correct_array[best] / total_array[best]), '%')
 print('class with lowest accuracy:', target_classes[worst],
       '%.2f' % (100 * correct_array[worst] / total_array[worst]), '%')
+print('')
 
 # create and show confusion matrix
 confusion = pd.DataFrame.from_dict(confusion)
@@ -166,6 +166,19 @@ confusion.columns = target_classes
 confusion.index = target_classes
 print('Confusion Matrix')
 print(confusion)
+
+'''
+# show batch with images & predicted outputs
+print('')
+for output, label in zip(outputs.data.cpu(), labels):
+    output = np.array(output)
+    ndx = output.argsort()[-3:][::-1]
+    print('actual class:', target_classes[int(label)])
+    print('top 3 predicted classes:')
+    for i, n in enumerate(ndx):
+        print(i + 1, ':', target_classes[n])
+    print('--------------------')
+'''
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
 torch.save(cnn.state_dict(), 'cnn.pkl')
