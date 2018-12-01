@@ -11,8 +11,8 @@ pd.set_option('display.width', 320)
 pd.set_option("display.max_columns", 15)
 # -----------------------------------------------------------------------------------
 # training parameters
-batch_size = 50
-num_epochs = 15
+batch_size = 30
+num_epochs = 1
 
 # train and test set files
 h5train_file = "food_train128.h5"
@@ -129,8 +129,8 @@ total_array = np.zeros(len(target_classes))
 confusion = {x: [0 for i in range(len(target_classes))] for x in range(len(target_classes))}
 
 for images, labels in test_loader:
-    images = Variable(images).cuda()
-    outputs = cnn(images)
+    input_images = Variable(images).cuda()
+    outputs = cnn(input_images)
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     correct += (predicted.cpu() == labels).sum()
@@ -139,6 +139,7 @@ for images, labels in test_loader:
         total_array[actual] += 1
         if pred == actual:
             correct_array[actual] += 1
+    images = images
 # -----------------------------------------------------------------------------------
 # display overall results
 print('Accuracy of the model on the test images: %d %%' % (100 * correct / total))
@@ -147,7 +148,8 @@ print('')
 print('Individual class accuracy:')
 target_classes = tuple(target_class.decode() for target_class in train_dataset.classes)
 for i, t in enumerate(target_classes):
-    print(t, correct_array[i], '/', total_array[i], '=>', '%.2f' % (100 * correct_array[i] / total_array[i]), '%')
+    print(t + '\t', int(correct_array[i]), 'correct', '/', int(total_array[i]), 'total',
+          '\t=>\t', '%.2f' % (100 * correct_array[i] / total_array[i]), '%', 'accuracy')
 
 # show and print out class/accuracy for highest and lowest accuracy values
 pct_array = correct_array / total_array
@@ -166,18 +168,18 @@ confusion.index = target_classes
 print('Confusion Matrix')
 print(confusion)
 
-'''
-# show batch with images & predicted outputs
-print('')
-for output, label in zip(outputs.data.cpu(), labels):
+# show final batch images with target class & top 3 predicted outputs
+for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
     output = np.array(output)
     ndx = output.argsort()[-3:][::-1]
-    print('actual class:', target_classes[int(label)])
-    print('top 3 predicted classes:')
-    for i, n in enumerate(ndx):
-        print(i + 1, ':', target_classes[n])
-    print('--------------------')
-'''
+    caption = 'Predicted Outputs: \n'
+    for j, n in enumerate(ndx):
+        caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
+    image = np.array(images[i]).T
+    plt.imshow(image)
+    plt.title('class label: ' + target_classes[label])
+    plt.figtext(1, 0.5, caption)
+    plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
 torch.save(cnn.state_dict(), 'cnn.pkl')
