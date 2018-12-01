@@ -48,6 +48,7 @@ target_classes = tuple(target_class.decode() for target_class in train_dataset.c
 print('Number of training images:', train_dataset.__len__())
 print('Number of testing images:', test_dataset.__len__())
 print('target classes:', target_classes)
+print('-------------------------------------------------------')
 # -----------------------------------------------------------------------------------
 # define the network model
 class CNN(nn.Module):
@@ -116,12 +117,13 @@ for epoch in range(num_epochs):
 
 end = time.time()
 print("training time:", '%.2f' % (end - start), 'seconds')
-print('')
+print('-------------------------------------------------------')
 # -----------------------------------------------------------------------------------
 # Test the Model
 cnn.eval()  # Change model to 'eval' mode (BN uses moving mean/var).
 
 print('Testing...')
+
 correct = 0
 total = 0
 correct_array = np.zeros(len(target_classes))
@@ -142,6 +144,8 @@ for images, labels in test_loader:
     images = images
 # -----------------------------------------------------------------------------------
 # display overall results
+print('-------------------------------------------------------')
+print('Results')
 print('Accuracy of the model on the test images: %d %%' % (100 * correct / total))
 print('')
 # display individual category results
@@ -170,17 +174,20 @@ print('Confusion Matrix')
 print(confusion)
 
 # show final batch images with target class & top 3 predicted outputs
+print('')
+print('Final Batch Labels and Predicted Outputs')
 for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
     output = np.array(output)
     ndx = output.argsort()[-3:][::-1]
     caption = 'Predicted Outputs: \n'
     for j, n in enumerate(ndx):
         caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
+    print('Actual Label:', target_classes[label])
     print(caption)
     image = np.array(images[i]).T
     plt.imshow(image)
     plt.title(target_classes[label])
-    plt.figtext(0.5, 0, caption)
+    plt.xlabel(caption)
     plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
