@@ -4,14 +4,14 @@ import h5py
 from PIL import Image
 import matplotlib.pyplot as plt
 from skimage.transform import resize
+from sklearn.model_selection import train_test_split
 import random
 
 '''
-This file will successfully create an HDF5 database of images, labels, and categories given that the following
-directories and files exist:
-    folder titled 'images' in current working directory
-    'images' folder contains folders titled with a type of food
-    these subfolders (i.e. 'tacos' or 'hot_dog') contain .jpg files of pictures of food from folder title 
+This file will create an HDF5 database of images, labels, and categories given that the following
+directories and files exist in the current working directory:
+    - folder titled 'images' containing subfolders titled with a type of food
+    - these subfolders (i.e. 'tacos' or 'hot_dog') contain .jpg files of pictures of food from folder title 
 '''
 
 # define 12 new categories in array
@@ -88,19 +88,20 @@ for folder in os.listdir('images'):
                 continue
     else:
         print(folder, 'not used to create target classes')
-
+'''
 # shuffle images and labels together
 image_labels = list(zip(images, labels))
 random.shuffle(image_labels)
 images, labels = zip(*image_labels)
 images = list(images)
 labels = list(labels)
-
+'''
 # convert lists to numpy arrays
 images = np.array(images)
 labels = np.array(labels)
 categories = np.array(new_category_names, dtype='S10')
 
+'''
 # split into train and test sets 80/20 split
 random.seed(0)
 num_images = len(images)
@@ -111,14 +112,18 @@ test_images = images[split_index:]
 test_labels = labels[split_index:]
 print('number of training images:', len(train_images))
 print('number of testing images:', len(test_images))
+'''
+
+# use sklearn train_test_split to create training and testing sets
+train_images, test_images, train_labels, test_labels = train_test_split(images, labels, test_size=0.2, stratify=labels)
 
 # create new dataset objects
-train_filename = 'food_train128.h5'
+train_filename = 'food_train.h5'
 train_file = h5py.File(train_filename, 'w')
-test_filename = 'food_test128.h5'
+test_filename = 'food_test.h5'
 test_file = h5py.File(test_filename, 'w')
 
-# add datasets to dataset objecta
+# add datasets to dataset objects
 train_categories = train_file.create_dataset('categories', data=categories)
 train_labels = train_file.create_dataset('labels', data=train_labels)
 train_images = train_file.create_dataset('images', data=train_images)
@@ -139,5 +144,8 @@ plt.show()
 print('target classes for dataset:')
 for cat in train_file.get('categories'):
     print(cat.decode())
+u, c = np.unique(test_labels, return_counts=True)
+for un, co in zip(u, c):
+    print(un, co)
 train_file.close()
 test_file.close()

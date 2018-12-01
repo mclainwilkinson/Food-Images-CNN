@@ -15,8 +15,8 @@ batch_size = 30
 num_epochs = 1
 
 # train and test set files
-h5train_file = "food_train128.h5"
-h5test_file = "food_test128.h5"
+h5train_file = "food_train.h5"
+h5test_file = "food_test.h5"
 
 # class for creating torch dataset from HDF5 database
 class DatasetFromHdf5(torch.utils.data.Dataset):
@@ -155,6 +155,7 @@ for i, t in enumerate(target_classes):
 pct_array = correct_array / total_array
 best = int(np.argmax(pct_array))
 worst = int(np.argmin(pct_array))
+print('')
 print('class with highest accuracy:', target_classes[best],
       '%.2f' % (100 * correct_array[best] / total_array[best]), '%')
 print('class with lowest accuracy:', target_classes[worst],
@@ -175,10 +176,11 @@ for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
     caption = 'Predicted Outputs: \n'
     for j, n in enumerate(ndx):
         caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
+    print(caption)
     image = np.array(images[i]).T
     plt.imshow(image)
-    plt.title('class label: ' + target_classes[label])
-    plt.figtext(1, 0.5, caption)
+    plt.title(target_classes[label])
+    plt.figtext(0.5, 0, caption)
     plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
