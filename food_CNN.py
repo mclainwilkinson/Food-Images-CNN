@@ -78,14 +78,14 @@ class CNN(nn.Module):
             nn.Conv2d(384, 256, kernel_size=4, padding=2),
             nn.BatchNorm2d(256),
             nn.ReLU(),
-            nn.MaxPool2d(2, stride=2))             # output size = 5 x 5
+            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 5 x 5
         self.layer6 = nn.Sequential(
             nn.Conv2d(256, 128, kernel_size=2),
             nn.BatchNorm2d(128),
             nn.ReLU(),
             nn.MaxPool2d(2, stride=2))             # output size = 2 x 2
         self.dropout = nn.Dropout(0.5)
-        self.fc = nn.Linear(1 * 1 * 128, 12)
+        self.fc = nn.Linear(2 * 2 * 128, 12)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -95,40 +95,6 @@ class CNN(nn.Module):
         out = self.layer5(out)
         out = self.layer6(out)
         out = self.dropout(out)
-        out = out.view(out.size(0), -1)
-        out = self.fc(out)
-        return out
-
-class CNN_Original(nn.Module):
-    def __init__(self):
-        super(CNN, self).__init__()
-        self.layer1 = nn.Sequential(               # input size = 128 x 128
-            nn.Conv2d(3, 100, kernel_size=8),
-            nn.BatchNorm2d(100),
-            nn.ReLU(),
-            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 61 x 61
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(100, 60, kernel_size=8),
-            nn.BatchNorm2d(60),
-            nn.ReLU(),
-            nn.MaxPool2d(2, stride=2))             # output size = 27 x 27
-        self.layer3 = nn.Sequential(
-            nn.Conv2d(60, 40, kernel_size=8),
-            nn.BatchNorm2d(40),
-            nn.ReLU(),
-            nn.MaxPool2d(2, stride=2))             # output size = 10 x 10
-        self.layer4 = nn.Sequential(
-            nn.Conv2d(40, 20, kernel_size=6),
-            nn.BatchNorm2d(20),
-            nn.ReLU(),
-            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 3 x 3
-        self.fc = nn.Linear(3 * 3 * 20, 12)        # output size = 12
-
-    def forward(self, x):
-        out = self.layer1(x)
-        out = self.layer2(out)
-        out = self.layer3(out)
-        out = self.layer4(out)
         out = out.view(out.size(0), -1)
         out = self.fc(out)
         return out
