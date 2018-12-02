@@ -11,8 +11,8 @@ pd.set_option('display.width', 320)
 pd.set_option("display.max_columns", 15)
 # -----------------------------------------------------------------------------------
 # training parameters
-batch_size = 30
-num_epochs = 5
+batch_size = 40
+num_epochs = 30
 
 # train and test set files
 h5train_file = "food_train.h5"
@@ -111,6 +111,8 @@ optimizer = torch.optim.Adam(cnn.parameters(), lr=0.001)
 # Train the Model
 num_images = train_dataset.__len__()
 start = time.time()
+epoch_list = [e + 1 for e in range(num_epochs)]
+loss_list = []
 print('Training...')
 
 for epoch in range(num_epochs):
@@ -128,8 +130,17 @@ for epoch in range(num_epochs):
         if (i + 1) % 100 == 0:
             print('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f'
                   % (epoch + 1, num_epochs, i + 1, num_images // batch_size, loss.item()))
+    loss_list.append(loss.item())
 
 end = time.time()
+
+# plot loss against epoch
+plt.plot(epoch_list, loss_list)
+plt.title('loss value by epoch')
+plt.xlabel('epoch #')
+plt.ylabel('loss value')
+plt.show()
+
 print("training time:", '%.2f' % (end - start), 'seconds')
 print('-------------------------------------------------------')
 # -----------------------------------------------------------------------------------
