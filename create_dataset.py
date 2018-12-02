@@ -54,7 +54,6 @@ category_name_mapping = {'bibimbap': 'egg',
                         'oysters': 'shell',
                         'pad_thai': 'noodles',
                         'pancakes': 'sweet_breakfast',
-                        'panna_cotta': 'smooth_dessert',
                         'pho': 'noodles',
                         'pork_chop': 'red_meat',
                         'poutine': 'fried_food',
@@ -67,7 +66,6 @@ category_name_mapping = {'bibimbap': 'egg',
                         'spaghetti_carbonara': 'pasta',
                         'steak': 'red_meat',
                         'strawberry_shortcake': 'cake',
-                        'tiramisu': 'smooth_dessert',
                         'waffles': 'sweet_breakfast'}
 
 # lists to add images and labels
