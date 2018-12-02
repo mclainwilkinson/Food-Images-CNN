@@ -54,6 +54,54 @@ print('-------------------------------------------------------')
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
+        self.layer1 = nn.Sequential(                # input size = 128 x 128
+            nn.Conv2d(3, 64, kernel_size=10, padding=4),
+            nn.BatchNorm2d(64),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 64 x 64
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(64, 128, kernel_size=10, padding=4),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 32 x 32
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(128, 256, kernel_size=10, padding=4),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 16 x 16
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(256, 384, kernel_size=10, padding=4),
+            nn.BatchNorm2d(384),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2, padding=1))  # output size = 8 x 8
+        self.layer5 = nn.Sequential(
+            nn.Conv2d(384, 256, kernel_size=4, padding=2),
+            nn.BatchNorm2d(256),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2))             # output size = 5 x 5
+        self.layer6 = nn.Sequential(
+            nn.Conv2d(256, 128, kernel_size=2),
+            nn.BatchNorm2d(128),
+            nn.ReLU(),
+            nn.MaxPool2d(2, stride=2))             # output size = 2 x 2
+        self.dropout = nn.Dropout(0.5)
+        self.fc = nn.Linear(1 * 1 * 128, 12)
+
+    def forward(self, x):
+        out = self.layer1(x)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        out = self.layer5(out)
+        out = self.layer6(out)
+        out = self.dropout(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
+        return out
+
+class CNN_Original(nn.Module):
+    def __init__(self):
+        super(CNN, self).__init__()
         self.layer1 = nn.Sequential(               # input size = 128 x 128
             nn.Conv2d(3, 100, kernel_size=8),
             nn.BatchNorm2d(100),
