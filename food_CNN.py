@@ -233,10 +233,12 @@ for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
     print('Actual Label:', target_classes[label])
     print(caption)
     image = np.array(images[i]).T
+    plt.figure(i)
     plt.imshow(image)
     plt.title(target_classes[label])
     plt.xlabel(caption)
-    plt.show()
+    plt.tight_layout()
+plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
 torch.save(cnn.state_dict(), 'cnn.pkl')
