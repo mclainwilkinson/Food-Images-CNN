@@ -12,7 +12,7 @@ pd.set_option("display.max_columns", 15)
 # -----------------------------------------------------------------------------------
 # training parameters
 batch_size = 30
-num_epochs = 1
+num_epochs = 5
 
 # train and test set files
 h5train_file = "food_train.h5"
@@ -221,23 +221,20 @@ confusion.index = target_classes
 print('Confusion Matrix')
 print(confusion)
 
-# show final batch images with target class & top 3 predicted outputs
-print('')
-print('Final Batch Labels and Predicted Outputs')
+# show 10 test images with target class & top 3 predicted outputs
 for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
-    output = np.array(output)
-    ndx = output.argsort()[-3:][::-1]
-    caption = 'Predicted Outputs: \n'
-    for j, n in enumerate(ndx):
-        caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
-    print('Actual Label:', target_classes[label])
-    print(caption)
-    image = np.array(images[i]).T
-    plt.figure(i)
-    plt.imshow(image)
-    plt.title(target_classes[label])
-    plt.xlabel(caption)
-    plt.tight_layout()
+    if i < 10:
+        output = np.array(output)
+        ndx = output.argsort()[-3:][::-1]
+        caption = 'Predicted Outputs: \n'
+        for j, n in enumerate(ndx):
+            caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
+        image = np.array(images[i]).T
+        plt.figure(i)
+        plt.imshow(image)
+        plt.title(target_classes[label])
+        plt.xlabel(caption)
+        plt.tight_layout()
 plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
