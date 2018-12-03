@@ -135,11 +135,11 @@ for epoch in range(num_epochs):
 end = time.time()
 
 # plot loss against epoch
+plt.figure(0)
 plt.plot(epoch_list, loss_list)
 plt.title('loss value by epoch')
 plt.xlabel('epoch #')
 plt.ylabel('loss value')
-plt.show()
 
 print("training time:", '%.2f' % (end - start), 'seconds')
 print('-------------------------------------------------------')
@@ -207,11 +207,13 @@ for i, (output, label) in enumerate(zip(outputs.data.cpu(), labels)):
         for j, n in enumerate(ndx):
             caption = caption + (str(j + 1) + ': ' + target_classes[n] + '\n')
         image = np.array(images[i]).T
-        plt.figure(i)
+        plt.figure(i + 1)
         plt.imshow(image)
         plt.title(target_classes[label])
         plt.xlabel(caption)
         plt.tight_layout()
+
+# show loss plot & 10 images w/ predicted classes
 plt.show()
 # -----------------------------------------------------------------------------------
 # Save the Trained Model
