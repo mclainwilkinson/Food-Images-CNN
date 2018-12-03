@@ -116,6 +116,7 @@ loss_list = []
 print('Training...')
 
 for epoch in range(num_epochs):
+    avg_loss = []
     for i, (data, target) in enumerate(train_loader):
         images = Variable(data).cuda()
         labels = Variable(target).cuda()
@@ -127,10 +128,14 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
 
+        avg_loss.append(loss.item())
+
         if (i + 1) % 100 == 0:
             print('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f'
                   % (epoch + 1, num_epochs, i + 1, num_images // batch_size, loss.item()))
-    loss_list.append(loss.item())
+            
+    # calculate avg loss for epoch and add to loss_list
+    loss_list.append(np.mean(avg_loss))
 
 end = time.time()
 
