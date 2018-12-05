@@ -133,7 +133,7 @@ for epoch in range(num_epochs):
         if (i + 1) % 100 == 0:
             print('Epoch [%d/%d], Iter [%d/%d] Loss: %.4f'
                   % (epoch + 1, num_epochs, i + 1, num_images // batch_size, loss.item()))
-            
+
     # calculate avg loss for epoch and add to loss_list
     loss_list.append(np.mean(avg_loss))
 
