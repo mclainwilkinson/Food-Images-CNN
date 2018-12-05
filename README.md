@@ -4,7 +4,7 @@ classifying images of food using a convolution neural network built with PyTorch
 ### Requirements
 * Python (3.5)
 * PyTorch
-* GPU
+* NVIDIA GPU card with CUDA capability
 
 ### How to Run
 1. Run the following commands to download the Kaggle API, unzip, and h5py python packages
